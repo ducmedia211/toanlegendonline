@@ -1,2 +1,15 @@
-# toanlegendonline
-toanlegendonline
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+*.json
+!package.json
+!tsconfig.json
+!components.json
+!metadata.json
+!firebase-blueprint.json
+!firebase-applet-config.json

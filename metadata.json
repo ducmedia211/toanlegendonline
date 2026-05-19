@@ -1,0 +1,21 @@
+import io from "socket.io-client";
+
+let socket: any = null;
+
+export const getSocket = (): any => {
+  if (!socket) {
+    // io() defaults to window.location.host if no URL is provided
+    socket = io({
+      reconnectionAttempts: 5,
+      timeout: 10000
+    });
+  }
+  return socket;
+};
+
+export const disconnectSocket = () => {
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
+};

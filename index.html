@@ -1,0 +1,47 @@
+import { AuthUser, UserStats } from "../types";
+
+export const joinUser = async (username: string): Promise<{ success: boolean; user?: AuthUser; error?: string }> => {
+  try {
+    const response = await fetch("/api/auth/join", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username }),
+    });
+    
+    let data;
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      console.error("Server returned non-JSON response:", text);
+      return { success: false, error: "Lỗi kết nối máy chủ (Không phải JSON)" };
+    }
+
+    if (!response.ok) return { success: false, error: data.error };
+    return { success: true, user: data.user };
+  } catch (err) {
+    console.error("Auth error:", err);
+    return { success: false, error: "Lỗi kết nối máy chủ" };
+  }
+};
+
+export const register = joinUser;
+export const login = joinUser;
+
+export const changePassword = async (): Promise<{ success: boolean; error?: string }> => {
+  return { success: false, error: "Chức năng đã được loại bỏ" };
+};
+
+export const updateProfile = async (userId: string, displayName?: string, stats?: UserStats): Promise<boolean> => {
+  try {
+    const response = await fetch("/api/auth/update-profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, displayName, stats }),
+    });
+    return response.ok;
+  } catch (err) {
+    return false;
+  }
+};
